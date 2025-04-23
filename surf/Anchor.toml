@@ -1,0 +1,21 @@
+[toolchain]
+
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+surf = "Ahyi5zC8KucSuDKY1BxRp9v1x61jEsuamTcR9cky8NYm"
+
+[programs.devnet]
+surf = "Ahyi5zC8KucSuDKY1BxRp9v1x61jEsuamTcR9cky8NYm"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "devnet"
+wallet = "/home/tushar/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
