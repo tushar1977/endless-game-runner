@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
+    "@project-serum/anchor": "^0.26.0",
     "@solana/wallet-adapter-base": "^0.9.26",
     "@solana/wallet-adapter-react": "^0.15.38",
     "@solana/wallet-adapter-react-ui": "^0.9.38",
@@ -13,7 +14,10 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "bs58": "^6.0.0",
+    "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.1",
+    "fs": "^0.0.1-security",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scripts": "5.0.1",

@@ -1,0 +1,121 @@
+{
+  "version": "0.1.0",
+  "name": "surf",
+  "instructions": [
+    {
+      "name": "initPlayer",
+      "accounts": [
+        {
+          "name": "playerAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "through the has_one constraint. The signer's key must match the wallet address",
+            "used to derive the player PDA."
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updatePlayer",
+      "accounts": [
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "through the has_one constraint. The signer's key must match the wallet address",
+            "used to derive the player PDA."
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "score",
+          "type": "u64"
+        },
+        {
+          "name": "coinsCollected",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "PlayerProfile",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "wallet",
+            "type": "publicKey"
+          },
+          {
+            "name": "highScore",
+            "type": "u64"
+          },
+          {
+            "name": "totalCoins",
+            "type": "u64"
+          },
+          {
+            "name": "dailyStreak",
+            "type": "u8"
+          },
+          {
+            "name": "lastDailyClaim",
+            "type": "i64"
+          },
+          {
+            "name": "skinsOwned",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "equippedSkin",
+            "type": "publicKey"
+          },
+          {
+            "name": "gamesPlayed",
+            "type": "u32"
+          },
+          {
+            "name": "lastGameTimestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "address": "Ahyi5zC8KucSuDKY1BxRp9v1x61jEsuamTcR9cky8NYm"
+  }
+}
