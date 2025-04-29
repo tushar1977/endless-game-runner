@@ -4,17 +4,17 @@
 resolution = true
 skip-lint = false
 
-[programs.localnet]
-surf = "6XKkLh8nS7xQRRfdTfCCaqV9jBTzM7BG6Cyw7t8fhstP"
-
 [programs.devnet]
-surf = "6XKkLh8nS7xQRRfdTfCCaqV9jBTzM7BG6Cyw7t8fhstP"
+surf = "A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf"
+
+[programs.localnet]
+surf = "A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Devnet"
+cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
