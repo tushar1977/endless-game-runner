@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cchuap5hidono"]
+
+[ext_resource type="Script" uid="uid://dpvkkccpp0nd0" path="res://scripts/coin.gd" id="1_0t63x"]
+[ext_resource type="PackedScene" uid="uid://i5mj3wod6gq0" path="res://assets/coin/coin.glb" id="1_d5gmh"]
+
+[node name="Coin" type="Node3D"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+script = ExtResource("1_0t63x")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_d5gmh")]
+transform = Transform3D(0.2, 0, 0, 0, 0.193698, 0.0498124, 0, -0.0498124, 0.193698, -1.63383, -2.36237, 0)

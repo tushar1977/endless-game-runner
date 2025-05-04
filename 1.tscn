@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://1yidrsafukv5"]
+
+[ext_resource type="PackedScene" uid="uid://bdma6tmmuy7i6" path="res://assets/barrier/cyberpunk_tv-pillar.glb" id="1_8xuhg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8xuhg"]
+size = Vector3(1.6217, 4.45575, 2.22733)
+
+[node name="1" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0102716, 0)
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_8xuhg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.60002, 0)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 3
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0149536, 0.70574, -0.035965)
+shape = SubResource("BoxShape3D_8xuhg")

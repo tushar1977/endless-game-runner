@@ -1,0 +1,50 @@
+extends CharacterBody3D
+
+@onready var animation_tree: AnimationTree = $AnimationTree
+
+var SPEED = 5.0
+const JUMP_VELOCITY = 8
+
+var direction_changed: bool
+var vertical_action_performed: bool
+
+func _physics_process(delta: float) -> void:
+	# Add gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta * 2
+
+	velocity.z = SPEED
+	velocity.x = 0 
+
+	move_and_slide()
+	handle_animations()
+
+
+func restart_game():
+	get_tree().reload_current_scene()
+
+func jump() -> void:
+	if is_on_floor():
+		velocity.y = JUMP_VELOCITY
+
+func handle_animations() -> void:
+	animation_tree.set("parameters/conditions/Running", is_on_floor())
+	animation_tree.set("parameters/conditions/Jump", not is_on_floor())
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventScreenDrag:
+		var drag: Vector2 = event.relative
+		if not direction_changed:
+			if abs(drag.x) > abs(drag.y):
+				var direction: int = sign(event.relative.x)
+				if get_parent().is_valid_move(get_parent().current_player_pos + direction):
+					direction_changed = true
+					get_parent().tween_player(get_parent().current_player_pos + direction)
+			else:
+				var direction: int = sign(event.relative.y)
+				if not vertical_action_performed:
+					if direction == -1:
+						jump()
+	if event is InputEventScreenTouch:
+		if !event.pressed:
+			direction_changed = false
