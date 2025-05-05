@@ -1,21 +1,21 @@
 [toolchain]
 
 [features]
-resolution = true
+seeds = false
 skip-lint = false
 
 [programs.devnet]
-surf = "A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf"
+surf = "4pzvADeMCm62GziZvTfEMTeoYnraQJJmN5tAdqd6ARSM"
 
 [programs.localnet]
-surf = "A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf"
+surf = "4pzvADeMCm62GziZvTfEMTeoYnraQJJmN5tAdqd6ARSM"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
 cluster = "Localnet"
-wallet = "~/.config/solana/id.json"
+wallet = "/home/tushar/.config/solana/id.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

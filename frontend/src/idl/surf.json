@@ -65,9 +65,237 @@
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "mintNft",
+      "accounts": [
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftAuthority",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "through the has_one constraint. The signer's key must match the wallet address",
+            "used to derive the player PDA."
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "uri",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "symbol",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "updateNft",
+      "accounts": [
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "through the has_one constraint. The signer's key must match the wallet address",
+            "used to derive the player PDA."
+          ]
+        },
+        {
+          "name": "nftAuthority",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "highScore",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "listNft",
+      "accounts": [
+        {
+          "name": "signer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The mint of the NFT"
+          ]
+        },
+        {
+          "name": "skinToList",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "skinToListTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "NFT token account owned by signer"
+          ]
+        },
+        {
+          "name": "escrow",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ATA owned by escrow PDA for holding the NFT"
+          ]
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "price",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
+    {
+      "name": "Escrow",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "seller",
+            "type": "publicKey"
+          },
+          {
+            "name": "price",
+            "type": "u64"
+          },
+          {
+            "name": "skinToList",
+            "type": "publicKey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NftAuthority",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
     {
       "name": "PlayerProfile",
       "type": {
@@ -110,12 +338,77 @@
           {
             "name": "lastGameTimestamp",
             "type": "i64"
+          },
+          {
+            "name": "hasHighscoreNft",
+            "type": "bool"
+          },
+          {
+            "name": "highscoreNftMint",
+            "type": "publicKey"
           }
         ]
       }
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "NoHighscoreToMint",
+      "msg": "No high score to mint as NFT"
+    },
+    {
+      "code": 6001,
+      "name": "DailyClaimNotAvailable",
+      "msg": "Daily skin claim not yet available"
+    },
+    {
+      "code": 6002,
+      "name": "SkinNotOwned",
+      "msg": "Player does not own this skin"
+    },
+    {
+      "code": 6003,
+      "name": "SkinNotListed",
+      "msg": "Cannot list your skin"
+    },
+    {
+      "code": 6004,
+      "name": "InvalidMintAccountSpace",
+      "msg": "Invalid Mint account space"
+    },
+    {
+      "code": 6005,
+      "name": "CantInitializeMetadataPointer",
+      "msg": "Cant initialize metadata_pointer"
+    },
+    {
+      "code": 6006,
+      "name": "AlreadyHasNFT",
+      "msg": "Player already has NFT"
+    },
+    {
+      "code": 6007,
+      "name": "SaleNotActive",
+      "msg": "Sale is not active."
+    },
+    {
+      "code": 6008,
+      "name": "MinimumListingPrice",
+      "msg": "Minimum listing is 0.001 sol"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidTokenProgram",
+      "msg": "INvalid ID"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidEscrowProgram",
+      "msg": "Ivalud escrown"
+    }
+  ],
   "metadata": {
-    "address": "Ahyi5zC8KucSuDKY1BxRp9v1x61jEsuamTcR9cky8NYm"
+    "address": "A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf"
   }
 }

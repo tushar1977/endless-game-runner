@@ -3,16 +3,20 @@ pub mod errors;
 pub mod instructions;
 pub mod states;
 
+use crate::instructions::__client_accounts_buy_nft;
 use crate::instructions::__client_accounts_init_player;
+use crate::instructions::__client_accounts_list_nft;
 use crate::instructions::__client_accounts_mint_nft;
 use crate::instructions::__client_accounts_update_nft;
 use crate::instructions::__client_accounts_update_player;
+use crate::instructions::{buy_nft, BuyNFT};
 use crate::instructions::{init_Player, InitPlayer};
+use crate::instructions::{list_nft, ListNft};
 use crate::instructions::{mint_nft, MintNft};
 use crate::instructions::{update_nft, UpdateNft};
 use crate::instructions::{update_player, UpdatePlayer};
 
-declare_id!("A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf");
+declare_id!("4pzvADeMCm62GziZvTfEMTeoYnraQJJmN5tAdqd6ARSM");
 
 #[program]
 pub mod surf {
@@ -42,5 +46,13 @@ pub mod surf {
 
     pub fn update_nft(ctx: Context<UpdateNft>, high_score: u64) -> Result<()> {
         update_nft::update_nft(ctx, high_score)
+    }
+
+    pub fn list_nft(ctx: Context<ListNft>, price: u64) -> Result<()> {
+        list_nft::list_nft(ctx, price)
+    }
+
+    pub fn buy_nft(ctx: Context<BuyNFT>) -> Result<()> {
+        buy_nft::buy_nft(ctx)
     }
 }

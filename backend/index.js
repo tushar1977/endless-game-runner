@@ -21,7 +21,7 @@ app.use('/api/player', player_route);
 
 async function main() {
   app.listen(4000, () => {
-    console.log('🚀 Server listening on port 3000');
+    console.log('🚀 Server listening on port 4000');
   });
 }
 

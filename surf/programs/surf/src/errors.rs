@@ -23,4 +23,6 @@ pub enum CustomErrors {
     InvalidTokenProgram,
     #[msg("Ivalud escrown")]
     InvalidEscrowProgram,
+    #[msg("Token amount less than 0")]
+    EscrowTokenBalanceZero,
 }

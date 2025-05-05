@@ -4,8 +4,8 @@ use crate::states::player_data::PlayerProfile;
 use anchor_lang::{prelude::*, system_program};
 use anchor_spl::{
     associated_token::{self, AssociatedToken},
-    token_2022,
-    token_interface::{spl_token_2022::instruction::AuthorityType, Token2022},
+    token_2022::{self, Token2022},
+    token_interface::spl_token_2022::instruction::AuthorityType,
 };
 use solana_program::program::{invoke, invoke_signed};
 use spl_token_2022::{extension::ExtensionType, state::Mint};
@@ -172,6 +172,11 @@ pub fn mint_highest_score_nft(
     player.has_highscore_nft = true;
     player.highscore_nft_mint = ctx.accounts.mint.key();
     player.skins_owned.push(ctx.accounts.mint.key());
+    msg!(
+        "NFT Minted Pubkey:= {} by {}",
+        ctx.accounts.mint.key(),
+        ctx.accounts.player.key()
+    );
     Ok(())
 }
 

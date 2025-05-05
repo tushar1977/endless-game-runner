@@ -1,6 +1,6 @@
 use crate::errors::CustomErrors;
 use crate::states::{nft_authority::NftAuthority, player_data::PlayerProfile};
-use anchor_lang::{prelude::*, system_program};
+use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token_2022::Token2022};
 use solana_program::program::invoke_signed;
 pub fn update_nft(ctx: Context<UpdateNft>, high_score: u64) -> Result<()> {
@@ -33,6 +33,7 @@ pub fn update_nft(ctx: Context<UpdateNft>, high_score: u64) -> Result<()> {
         ],
         signer,
     )?;
+    player.high_score = high_score;
 
     Ok(())
 }
@@ -43,7 +44,6 @@ pub struct UpdateNft<'info> {
         mut,
         seeds = [b"player", signer.key().as_ref()],
         bump,
-        has_one = wallet
     )]
     pub player: Account<'info, PlayerProfile>,
 
@@ -53,31 +53,15 @@ pub struct UpdateNft<'info> {
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token2022>,
 
-    /// CHECK: We will create this one for the user
-    #[account(mut)]
-    pub token_account: AccountInfo<'info>,
-
     /// CHECK: This is safe because we verify the wallet matches the PDA-derived account
     /// through the has_one constraint. The signer's key must match the wallet address
     /// used to derive the player PDA.
     #[account(mut)]
-    pub mint: Signer<'info>,
-
-    pub rent: Sysvar<'info, Rent>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub mint: AccountInfo<'info>,
 
     #[account(
         seeds = [b"nft_authority".as_ref()], 
         bump
     )]
     pub nft_authority: Account<'info, NftAuthority>,
-
-    /// CHECK: This is safe because we verify the wallet matches the PDA-derived account
-    /// through the has_one constraint. The signer's key must match the wallet address
-    /// used to derive the player PDA.
-    #[account(
-        seeds = [b"wallet", signer.key().as_ref()],
-        bump,
-    )]
-    pub wallet: AccountInfo<'info>,
 }

@@ -16,18 +16,7 @@ pub struct PlayerProfile {
 
 impl PlayerProfile {
     pub const MAX_SKINS: usize = 10;
-    pub const SPACE: usize = 8 + // discriminator
-                            32 + // wallet pubkey
-                            8 + // high_score (u64)
-                            8 + // total_coins (u64)
-                            1 + // daily_streak (u8)
-                            8 + // last_daily_claim (i64)
-                            4 + (32 * Self::MAX_SKINS) + // Vec<Pubkey> (4 bytes for length + 32 bytes per pubkey)
-                            32 + // equipped_skin (Pubkey)
-                            4 + // games_played (u32)
-                            8 + // last_game_timestamp (i64)
-                            1 + // has_highscore_nft (bool)
-                            32; // highscore_nft_mint (Pubkey)
+    pub const SPACE: usize = 350;
 
     pub fn initialize(&mut self, wallet: Pubkey) {
         self.wallet = wallet;
