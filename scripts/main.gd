@@ -2,6 +2,13 @@ extends Node3D
 
 @onready var player: CharacterBody3D = $Player
 @onready var positions: Array[Marker3D] = [$Marker3D2, $Marker3D3, $Marker3D]  
+@onready var coin_label: Label = $Player/CoinsScreen/SubViewport/HBoxContainer/Score
+@onready var death_screen = $DeathScreen
+@onready var start_screen: Label = $StartScreen/start/SubViewport/VBoxContainer/Label
+@onready var start_button: Button = $StartScreen/start/SubViewport/VBoxContainer/Button
+
+
+
 
 const PLATFORM = preload("res://city.tscn")
 const OBSTACLES = [
@@ -21,14 +28,32 @@ var time_elapsed: float = 0.0
 var base_speed: float = 5.0 
 var speed: float = base_speed
 var score: int = 0
+var is_dead: bool = false
 
 
 
 
 
-func _ready() -> void:
+
+var player_base_y: float
+
+func _ready():
+	
+	start_screen.visible = true
+	get_tree().paused = true  # Pause the game logic
+	
 	initialize_player()
+	player_base_y = player.global_position.y
 	spawn_initial_platforms()
+	player.connect("player_died", Callable(self, "_on_player_died"))
+
+
+func _on_player_died():
+	is_dead = true
+	speed = 0
+	player.velocity = Vector3.ZERO
+	death_screen.visible = true
+
 
 func _process(delta: float) -> void:
 	time_elapsed += delta
@@ -148,7 +173,9 @@ func spawn_coins(platform_ref: Node3D):
 
 	var start_z = platform_ref.get_node("start").global_position.z
 	var end_z = platform_ref.get_node("end").global_position.z
-	var base_y = player.global_position.y + 1.5
+	var base_y = player_base_y + 1.5
+
+
 
 	var group_start_z = start_z + randf_range(10, 20)
 	var coin_spacing = 1.5
@@ -218,3 +245,8 @@ func _on_coin_collected(coin: Node) -> void:
 	score += 1
 	coin.queue_free()
 	print("Score: ", score)
+	coin_label.text = "Coins: " + str(score)
+func _on_StartButton_pressed():
+	start_screen.visible = false
+	get_tree().paused = false  # Resume game logic
+	print('uu')

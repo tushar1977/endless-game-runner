@@ -3,10 +3,11 @@ extends CharacterBody3D
 @onready var animation_tree: AnimationTree = $AnimationTree
 
 var SPEED = 5.0
-const JUMP_VELOCITY = 10
+const JUMP_VELOCITY = 8
 
 var direction_changed: bool
 var vertical_action_performed: bool
+
 
 func _physics_process(delta: float) -> void:
 	# Add gravity.
