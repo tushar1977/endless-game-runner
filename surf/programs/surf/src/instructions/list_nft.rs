@@ -10,7 +10,7 @@ pub fn list_nft(ctx: Context<ListNft>, price: u64) -> Result<()> {
     msg!("Initializing escrow account...");
 
     let escrow = &mut ctx.accounts.escrow;
-    escrow.mint = ctx.accounts.mint.key();
+    let player = &mut ctx.accounts.player;
     escrow.seller = ctx.accounts.signer.key();
     escrow.price = price;
     escrow.skin_to_list = ctx.accounts.skin_to_list.key();
@@ -20,19 +20,27 @@ pub fn list_nft(ctx: Context<ListNft>, price: u64) -> Result<()> {
     msg!("Transferring NFT to escrow...");
 
     let cpi_program = ctx.accounts.token_program.to_account_info();
-    let cpi_accounts = token_2022::Transfer {
+    let cpi_accounts = token_2022::TransferChecked {
         from: ctx.accounts.skin_to_list_token_account.to_account_info(),
         to: ctx.accounts.escrow_token_account.to_account_info(),
+        mint: ctx.accounts.skin_to_list.to_account_info(),
         authority: ctx.accounts.signer.to_account_info(),
     };
 
     let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
-    token_2022::transfer(cpi_ctx, 1)?;
+    token_2022::transfer_checked(cpi_ctx, 1, 0)?;
 
     msg!("NFT listed successfully!");
+
+    player
+        .skins_owned
+        .retain(|mint| mint != &ctx.accounts.skin_to_list.key());
+    if player.equipped_skin == ctx.accounts.skin_to_list.key() {
+        player.equipped_skin = Pubkey::default();
+    }
+
     Ok(())
 }
-
 #[derive(Accounts)]
 pub struct ListNft<'info> {
     #[account(mut)]
@@ -53,12 +61,9 @@ pub struct ListNft<'info> {
     )]
     pub wallet: AccountInfo<'info>,
 
-    /// The mint of the NFT
-    pub mint: AccountInfo<'info>,
-
     #[account(
+        mut,
         mint::token_program = token_program,
-        address = mint.key()
     )]
     pub skin_to_list: InterfaceAccount<'info, Mint>,
 

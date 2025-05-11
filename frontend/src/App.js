@@ -1,97 +1,99 @@
 import React, { useEffect, useState } from 'react';
-import BN from "bn.js";
 import { useWallet } from '@solana/wallet-adapter-react';
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import {
   Connection,
   Transaction,
+  PublicKey,
   Keypair,
   SystemProgram,
-  PublicKey,
-  sendAndConfirmTransaction
 } from "@solana/web3.js";
-import * as anchor from '@project-serum/anchor';
 import { Buffer } from 'buffer';
 import {
   TOKEN_2022_PROGRAM_ID,
   getAssociatedTokenAddress,
   ASSOCIATED_TOKEN_PROGRAM_ID,
-  createMint,
-  createAssociatedTokenAccountInstruction,
-  mintTo
 } from "@solana/spl-token";
-const PROGRAM_ID = new PublicKey('A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf');
-const RPC_URL = 'http://127.0.0.1:8899';
 
-const IDL = require('./idl/surf.json'); // You'll need to have this file available
+import PlayerProfile from './components/PlayerProfile';
+import DevnetFaucet from './components/requestAirdrop';
+import ListedNfts from './components/getNFT';
+import ListNftButton from './components/listNFT';
+import HighScoreNftActions from './components/HighScoreNftActions';
+import useProgram from './hooks/useProgram';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import * as anchor from '@project-serum/anchor';
+
 window.Buffer = Buffer;
+
+const PROGRAM_ID = new anchor.web3.PublicKey('4pzvADeMCm62GziZvTfEMTeoYnraQJJmN5tAdqd6ARSM');
+
+const RPC_URL = 'https://api.devnet.solana.com';
 function App() {
-  const { publicKey, connected, signTransaction, sendTransaction } = useWallet();
+  const { publicKey, connected, signTransaction } = useWallet();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [nftLoading, setNftLoading] = useState(false);
   const [nftMinted, setNftMinted] = useState(false);
   const [nftSignature, setNftSignature] = useState('');
-
+  const [nftError, setNftError] = useState(null);
+  const program = useProgram();
   const connection = new Connection(RPC_URL, 'confirmed');
-  const getProgram = () => {
-    const walletAdapter = {
-      publicKey,
-      signTransaction,
-      signAllTransactions: async (txs) => Promise.all(txs.map(tx => signTransaction(tx)))
-    };
-    const provider = new anchor.AnchorProvider(connection, walletAdapter, { commitment: 'confirmed' });
-    return new anchor.Program(IDL, PROGRAM_ID, provider);
-  };
 
   useEffect(() => {
     if (connected && publicKey) {
       console.log('✅ Wallet connected:', publicKey.toBase58());
-      fetchProfile(); // Automatically fetch profile when wallet connects
+      fetchProfile();
     }
   }, [connected, publicKey]);
 
+
+
   const fetchProfile = async () => {
-    if (!publicKey) return;
+    if (!publicKey || !program) return;
+
+    if (loading) return;
 
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch('http://localhost:4000/api/player/fetchProfile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ publicKey: publicKey.toBase58() }),
-      });
+      const playerSeed = new TextEncoder().encode('player');
+      const [playerPDA] = PublicKey.findProgramAddressSync(
+        [playerSeed, publicKey.toBytes()],
+        PROGRAM_ID
+      );
 
-      const data = await res.json();
+      const profileAccount = await program.account.playerProfile.fetch(playerPDA);
+      console.log('🎯 Profile fetched:', profileAccount);
+      setProfile(profileAccount);
 
-      if (res.ok) {
-        console.log('🎯 Profile fetched:', data);
-        setProfile(data);
-      } else {
-        console.warn('⚠️ Profile not found:', data);
-        setProfile(null);
-
-        // Ask user if they want to initialize a profile
-        if (window.confirm('Player profile not found. Would you like to create one?')) {
-          await initPlayer();
-        }
-      }
     } catch (err) {
-      console.error('❌ Error fetching profile:', err);
-      setError('Failed to fetch profile. Please try again.');
+      if (err.message?.includes('Account does not exist') || err.code === 0) {
+        console.log('Profile not found');
+
+        if (!window.profileInitPromptShown) {
+          window.profileInitPromptShown = true;
+          const shouldInitialize = window.confirm(
+            'Player profile not found. Would you like to create one?'
+          );
+
+          if (shouldInitialize) {
+            await initPlayer();
+          }
+        }
+      } else {
+        console.error('❌ Error fetching profile:', err);
+        setError(`Failed to fetch profile: ${err.message}`);
+      }
     } finally {
       setLoading(false);
+      window.profileInitPromptShown = false;
     }
   };
-
   const initPlayer = async () => {
-    if (!publicKey || !signTransaction) {
-      alert('Wallet not connected or doesn\'t support signing');
+    if (!publicKey || !signTransaction || !program) {
+      alert("Wallet not connected or doesn't support signing or program not initialized");
       return;
     }
 
@@ -99,27 +101,11 @@ function App() {
     setError(null);
 
     try {
-      const connection = new Connection(RPC_URL, 'confirmed');
-
-      const walletAdapter = {
-        publicKey,
-        signTransaction,
-        signAllTransactions: async (txs) => {
-          return Promise.all(txs.map(tx => signTransaction(tx)));
-        }
-      };
-
-      const provider = new anchor.AnchorProvider(
-        connection,
-        walletAdapter,
-        { commitment: 'confirmed' }
-      );
-
-      const program = new anchor.Program(IDL, PROGRAM_ID, provider);
+      console.log('🔄 Creating initialization transaction...');
 
       const playerSeed = new TextEncoder().encode('player');
       const walletSeed = new TextEncoder().encode('wallet');
-
+      console.log(publicKey)
       const [playerPDA] = PublicKey.findProgramAddressSync(
         [playerSeed, publicKey.toBytes()],
         PROGRAM_ID
@@ -130,9 +116,8 @@ function App() {
         PROGRAM_ID
       );
 
-      console.log('🔄 Creating initialization transaction...');
-
-      const tx = await program.methods.initPlayer()
+      const tx = await program.methods
+        .initPlayer()
         .accounts({
           playerAccount: playerPDA,
           signer: publicKey,
@@ -141,37 +126,23 @@ function App() {
         })
         .transaction();
 
-      // Get recent blockhash and set fee payer
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
       tx.feePayer = publicKey;
 
       console.log('🔑 Signing transaction...');
-      // Sign the transaction
       const signedTx = await signTransaction(tx);
 
-      // Serialize transaction to base64 string
-      const serializedTx = Buffer.from(signedTx.serialize()).toString('base64');
+      console.log('📡 Sending transaction to Solana...');
+      const rawTx = signedTx.serialize();
+      const txSig = await connection.sendRawTransaction(rawTx);
 
-      console.log('📡 Sending transaction to backend...');
-      // Send the signed transaction to the backend
-      const res = await fetch('http://localhost:4000/api/player/init', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          signedTx: serializedTx
-        }),
-      });
+      console.log('⏳ Confirming transaction...');
+      await connection.confirmTransaction(txSig, 'confirmed');
 
-      const data = await res.json();
+      console.log('✅ Player initialized!', txSig);
+      alert(`Player profile created successfully! Transaction signature: ${txSig}`);
 
-      if (res.ok) {
-        console.log('✅ Player initialized!', data);
-        alert(`Player profile created successfully! Transaction signature: ${data.signature}`);
-        // Fetch the newly created profile
-        await fetchProfile();
-      } else {
-        throw new Error(data.message || 'Failed to initialize player');
-      }
+      await fetchProfile();
     } catch (err) {
       console.error('❌ Error initializing player:', err);
       setError(`Failed to initialize player: ${err.message}`);
@@ -180,10 +151,9 @@ function App() {
       setLoading(false);
     }
   };
-
   const mintHighScoreNFT = async () => {
-    if (!publicKey || !signTransaction || !profile) {
-      alert("Wallet not connected or profile not found");
+    if (!publicKey || !signTransaction || !profile || !program) {
+      alert("Wallet not connected or profile not found or program not initialized");
       return;
     }
 
@@ -191,25 +161,19 @@ function App() {
     setError(null);
 
     try {
-      const program = getProgram();
-
       const highScore = profile.highScore || 0;
       const name = `Surf High Score: ${highScore}`;
       const symbol = "SURF";
-      const uri = "https://arweave.net/MHK3Iopy0GgvDoM7LkkiAdg7pQqExuuWvedApCnzfj0";
-
+      const uri = "https://bronze-circular-anteater-873.mypinata.cloud/ipfs/bafkreicqxfgqgujfk3selkf64v4llacajnkgdleh3eyjxpl2tz4gvcp2hy";
       const mint = Keypair.generate();
-
       const [playerPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("player"), publicKey.toBuffer()],
         PROGRAM_ID
       );
-
       const [walletPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("wallet"), publicKey.toBuffer()],
         PROGRAM_ID
       );
-
       const [nftPDA] = PublicKey.findProgramAddressSync([Buffer.from("nft_authority")], PROGRAM_ID)
       const destinationTokenAccount = await getAssociatedTokenAddress(
         mint.publicKey,
@@ -218,9 +182,13 @@ function App() {
         TOKEN_2022_PROGRAM_ID,
         ASSOCIATED_TOKEN_PROGRAM_ID
       );
-
+      const metadataVec = [
+        { key: "bg", value: "ff" },
+        { key: "fgg", value: "ff" },
+        { key: "speed", value: "fast" },
+      ];
       const ix = await program.methods
-        .mintNft(uri, name, symbol)
+        .mintNft(uri, name, symbol, false, null, metadataVec)
         .accounts({
           signer: publicKey,
           player: playerPDA,
@@ -244,6 +212,7 @@ function App() {
       setNftSignature(txid);
       setNftMinted(true);
       alert(`✅ NFT Minted! TX: ${txid}`);
+
     } catch (err) {
       console.error("❌ NFT Minting Error:", err);
       setError(err.message);
@@ -252,15 +221,10 @@ function App() {
       setNftLoading(false);
     }
   };
-  // Function to check if player has a high score worth minting
-  const hasHighScore = () => {
-    return profile && profile.highScore && profile.highScore >= 0;
-  };
-
 
   const updateHighScoreNft = async () => {
-    if (!publicKey || !signTransaction || !profile || !profile.highscoreNftMint) {
-      alert("Wallet not connected or profile not found");
+    if (!publicKey || !signTransaction || !profile || !profile.highscoreNftMint || !program) {
+      alert("Wallet not connected or profile not found or NFT mint not found or program not initialized");
       return;
     }
 
@@ -268,20 +232,15 @@ function App() {
     setError(null);
 
     try {
-      const program = getProgram();
-
-      const highScore = new BN(222)
-
-      const mintPublicKey = new PublicKey(profile.highscoreNftMint)
-
+      const highScore = new anchor.BN(222);
+      const mintPublicKey = new PublicKey(profile.highscoreNftMint);
       const [playerPDA] = PublicKey.findProgramAddressSync(
         [Buffer.from("player"), publicKey.toBuffer()],
         PROGRAM_ID
       );
-
-      const [nftPDA] = PublicKey.findProgramAddressSync([Buffer.from("nft_authority")], PROGRAM_ID)
+      const [nftPDA] = PublicKey.findProgramAddressSync([Buffer.from("nft_authority")], PROGRAM_ID);
       const ix = await program.methods
-        .updateNft(new BN(highScore))
+        .updateNft(highScore)
         .accounts({
           signer: publicKey,
           player: playerPDA,
@@ -301,6 +260,7 @@ function App() {
 
       setNftSignature(txid);
       alert(`✅ NFT updated! TX: ${txid}`);
+
     } catch (err) {
       console.error("❌ Error updating NFT:", err);
       setError(err.message);
@@ -312,26 +272,16 @@ function App() {
 
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h1>🟡 Solana Wallet Connect Demo</h1>
+      <h1>🟡 Solana NFT Marketplace</h1>
 
       <WalletMultiButton />
 
+      <DevnetFaucet />
       {connected && (
         <>
           <button
             onClick={fetchProfile}
-            style={{
-              marginTop: '20px',
-              padding: '10px 20px',
-              fontSize: '16px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              borderRadius: '8px',
-              backgroundColor: '#ffaa00',
-              color: 'white',
-              border: 'none',
-              boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
-              opacity: loading ? 0.7 : 1,
-            }}
+            style={buttonStyle(loading)}
             disabled={loading}
           >
             {loading ? 'Processing...' : '📡 Fetch Profile'}
@@ -342,73 +292,69 @@ function App() {
           )}
 
           {profile && (
-            <div style={{ margin: '20px auto', maxWidth: '600px' }}>
-              <h2>Player Profile</h2>
-              <pre style={{ textAlign: 'left', background: '#f5f5f5', padding: '15px', borderRadius: '8px' }}>
-                {JSON.stringify(profile, null, 2)}
-              </pre>
-
-              {hasHighScore() && (
-                <button
-                  onClick={mintHighScoreNFT}
-                  style={{
-                    marginTop: '20px',
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    cursor: nftLoading ? 'not-allowed' : 'pointer',
-                    borderRadius: '8px',
-                    backgroundColor: '#9945FF',
-                    color: 'white',
-                    border: 'none',
-                    boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
-                    opacity: nftLoading ? 0.7 : 1,
-                  }}
-                  disabled={nftLoading || nftMinted}
-                >
-                  {nftLoading ? 'Minting...' : nftMinted ? '🎉 NFT Minted!' : '🖼️ Mint High Score NFT'}
-                </button>
-              )}
-
-              {profile.highscoreNftMint && (
-                <button
-                  onClick={updateHighScoreNft}
-                  style={{
-                    marginTop: '20px',
-                    padding: '10px 20px',
-                    fontSize: '16px',
-                    cursor: nftLoading ? 'not-allowed' : 'pointer',
-                    borderRadius: '8px',
-                    backgroundColor: '#ffaa00',
-                    color: 'white',
-                    border: 'none',
-                    boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
-                    opacity: nftLoading ? 0.7 : 1,
-                  }}
-                  disabled={nftLoading}
-                >
-                  {nftLoading ? 'Updating...' : '🔄 Update High Score NFT'}
-                </button>
-              )}
-
-              {nftMinted && nftSignature && (
-                <div style={{ marginTop: '20px' }}>
-                  <p>NFT minted successfully!</p>
-                  <a
-                    href={`https://explorer.solana.com/tx/${nftSignature}?cluster=devnet`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ color: '#9945FF' }}
-                  >
-                    View transaction on Solana Explorer
-                  </a>
+            <>
+              <PlayerProfile profile={profile} />
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '30px',
+                marginTop: '40px'
+              }}>
+                <div style={{
+                  width: '100%',
+                  maxWidth: '800px',
+                  border: '1px solid #ddd',
+                  borderRadius: '10px',
+                  padding: '20px'
+                }}>
+                  <HighScoreNftActions
+                    profile={profile}
+                    mintHighScoreNFT={mintHighScoreNFT}
+                    updateHighScoreNft={updateHighScoreNft}
+                    nftLoading={nftLoading}
+                    nftMinted={nftMinted}
+                    nftSignature={nftSignature}
+                  />
+                  <ListNftButton
+                    program={program}
+                    publicKey={publicKey}
+                    signTransaction={signTransaction}
+                    connection={connection}
+                    profile={profile}
+                  />
                 </div>
-              )}
-            </div>
+
+                <div style={{
+                  width: '100%',
+                  maxWidth: '1200px',
+                  border: '1px solid #ddd',
+                  borderRadius: '10px',
+                  padding: '20px'
+                }}>
+                  <h2>Marketplace Listings</h2>
+                  <ListedNfts program={program} />
+                </div>
+              </div>
+            </>
           )}
         </>
       )}
     </div>
   );
 }
+
+const buttonStyle = (loading) => ({
+  marginTop: '20px',
+  padding: '10px 20px',
+  fontSize: '16px',
+  cursor: loading ? 'not-allowed' : 'pointer',
+  borderRadius: '8px',
+  backgroundColor: '#ffaa00',
+  color: 'white',
+  border: 'none',
+  boxShadow: '0px 4px 8px rgba(0,0,0,0.1)',
+  opacity: loading ? 0.7 : 1,
+});
 
 export default App;

@@ -24,7 +24,7 @@ pub fn update_nft(ctx: Context<UpdateNft>, high_score: u64) -> Result<()> {
             &spl_token_2022::id(),
             &ctx.accounts.mint.to_account_info().key(),
             &ctx.accounts.nft_authority.to_account_info().key(),
-            spl_token_metadata_interface::state::Field::Key("high_score".to_string()),
+            spl_token_metadata_interface::state::Field::Key("High Score".to_string()),
             high_score.to_string(),
         ),
         &[

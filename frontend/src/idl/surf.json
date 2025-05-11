@@ -136,6 +136,26 @@
         {
           "name": "symbol",
           "type": "string"
+        },
+        {
+          "name": "isHighScore",
+          "type": "bool"
+        },
+        {
+          "name": "highScore",
+          "type": {
+            "option": "u64"
+          }
+        },
+        {
+          "name": "metadata",
+          "type": {
+            "option": {
+              "vec": {
+                "defined": "MetadataField"
+              }
+            }
+          }
         }
       ]
     },
@@ -203,16 +223,8 @@
           "isSigner": false
         },
         {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false,
-          "docs": [
-            "The mint of the NFT"
-          ]
-        },
-        {
           "name": "skinToList",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -258,6 +270,79 @@
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "buyNft",
+      "accounts": [
+        {
+          "name": "buyer",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "seller",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "player",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "wallet",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nftMint",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "The mint of the NFT to be bought"
+          ]
+        },
+        {
+          "name": "buyerTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Maker's ATA for the NFT (used to send SOL)"
+          ]
+        },
+        {
+          "name": "escrow",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Escrow account holding NFT listing info"
+          ]
+        },
+        {
+          "name": "escrowTokenAccount",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Escrow's ATA holding the NFT"
+          ]
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -266,10 +351,6 @@
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "mint",
-            "type": "publicKey"
-          },
           {
             "name": "seller",
             "type": "publicKey"
@@ -285,6 +366,10 @@
           {
             "name": "bump",
             "type": "u8"
+          },
+          {
+            "name": "isClosed",
+            "type": "bool"
           }
         ]
       }
@@ -351,6 +436,24 @@
       }
     }
   ],
+  "types": [
+    {
+      "name": "MetadataField",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "key",
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -406,9 +509,14 @@
       "code": 6010,
       "name": "InvalidEscrowProgram",
       "msg": "Ivalud escrown"
+    },
+    {
+      "code": 6011,
+      "name": "EscrowTokenBalanceZero",
+      "msg": "Token amount less than 0"
     }
   ],
   "metadata": {
-    "address": "A9YHxLTPtT6YSCi793gNFMB4nUTByXhq9DzgKf169Zf"
+    "address": "4pzvADeMCm62GziZvTfEMTeoYnraQJJmN5tAdqd6ARSM"
   }
 }

@@ -2,7 +2,6 @@ use anchor_lang::prelude::Pubkey;
 use anchor_lang::prelude::*;
 #[account]
 pub struct Escrow {
-    pub mint: Pubkey,
     pub seller: Pubkey,
     pub price: u64,
     pub skin_to_list: Pubkey,

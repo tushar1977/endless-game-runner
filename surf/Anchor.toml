@@ -14,7 +14,7 @@ surf = "4pzvADeMCm62GziZvTfEMTeoYnraQJJmN5tAdqd6ARSM"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "/home/tushar/.config/solana/id.json"
 
 [scripts]

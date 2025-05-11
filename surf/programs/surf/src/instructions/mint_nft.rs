@@ -1,6 +1,8 @@
+use std::collections::HashMap;
+
 pub use crate::errors::CustomErrors;
-use crate::states::nft_authority::NftAuthority;
 use crate::states::player_data::PlayerProfile;
+use crate::states::{custom_vector::MetadataField, nft_authority::NftAuthority};
 use anchor_lang::{prelude::*, system_program};
 use anchor_spl::{
     associated_token::{self, AssociatedToken},
@@ -9,14 +11,19 @@ use anchor_spl::{
 };
 use solana_program::program::{invoke, invoke_signed};
 use spl_token_2022::{extension::ExtensionType, state::Mint};
-pub fn mint_highest_score_nft(
+pub fn mint_nft(
     ctx: Context<MintNft>,
     uri: String,
     name: String,
     symbol: String,
+    is_high_score: bool,
+    high_score: Option<u64>,
+    metadata: Option<Vec<MetadataField>>,
 ) -> Result<()> {
     let player = &mut ctx.accounts.player;
-    require!(player.high_score > 0, CustomErrors::NoHighscoreToMint);
+    if is_high_score {
+        require!(player.high_score > 0, CustomErrors::NoHighscoreToMint);
+    }
     let space =
         match ExtensionType::try_calculate_account_len::<Mint>(&[ExtensionType::MetadataPointer]) {
             Ok(space) => space,
@@ -25,7 +32,7 @@ pub fn mint_highest_score_nft(
             }
         };
 
-    let meta_data_space = 250;
+    let meta_data_space = 500;
     let lamports_required = Rent::get()?.minimum_balance(space + meta_data_space);
 
     msg!(
@@ -118,21 +125,57 @@ pub fn mint_highest_score_nft(
         signer,
     )?;
 
-    invoke_signed(
-        &spl_token_metadata_interface::instruction::update_field(
-            &spl_token_2022::id(),
-            ctx.accounts.mint.key,
-            ctx.accounts.nft_authority.to_account_info().key,
-            spl_token_metadata_interface::state::Field::Key("level".to_string()),
-            "1".to_string(),
-        ),
-        &[
-            ctx.accounts.mint.to_account_info().clone(),
-            ctx.accounts.nft_authority.to_account_info().clone(),
-        ],
-        signer,
-    )?;
+    if is_high_score {
+        let score = high_score.ok_or(CustomErrors::NoHighscoreToMint)?;
+        require!(score > 0, CustomErrors::NoHighscoreToMint);
 
+        invoke_signed(
+            &spl_token_metadata_interface::instruction::update_field(
+                &spl_token_2022::id(),
+                ctx.accounts.mint.key,
+                ctx.accounts.nft_authority.to_account_info().key,
+                spl_token_metadata_interface::state::Field::Key("High Score".to_string()),
+                score.to_string(),
+            ),
+            &[
+                ctx.accounts.mint.to_account_info().clone(),
+                ctx.accounts.nft_authority.to_account_info().clone(),
+            ],
+            signer,
+        )?;
+
+        player.has_highscore_nft = true;
+        player.highscore_nft_mint = ctx.accounts.mint.key();
+    } else {
+        if let Some(metadata_fields) = metadata {
+            let mut map = HashMap::new();
+
+            for field in metadata_fields {
+                map.insert(field.key, field.value);
+            }
+
+            for (k, v) in map {
+                invoke_signed(
+                    &spl_token_metadata_interface::instruction::update_field(
+                        &spl_token_2022::id(),
+                        ctx.accounts.mint.key,
+                        ctx.accounts.nft_authority.to_account_info().key,
+                        spl_token_metadata_interface::state::Field::Key(k),
+                        v,
+                    ),
+                    &[
+                        ctx.accounts.mint.to_account_info().clone(),
+                        ctx.accounts.nft_authority.to_account_info().clone(),
+                    ],
+                    signer,
+                )?;
+            }
+
+            player.skins_owned.push(ctx.accounts.mint.key());
+        } else {
+            msg!("No metadata provided for the NFT");
+        }
+    }
     associated_token::create(CpiContext::new(
         ctx.accounts.associated_token_program.to_account_info(),
         associated_token::Create {
@@ -169,14 +212,7 @@ pub fn mint_highest_score_nft(
         AuthorityType::MintTokens,
         None,
     )?;
-    player.has_highscore_nft = true;
-    player.highscore_nft_mint = ctx.accounts.mint.key();
-    player.skins_owned.push(ctx.accounts.mint.key());
-    msg!(
-        "NFT Minted Pubkey:= {} by {}",
-        ctx.accounts.mint.key(),
-        ctx.accounts.player.key()
-    );
+
     Ok(())
 }
 

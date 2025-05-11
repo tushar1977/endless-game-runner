@@ -1,0 +1,30 @@
+{
+  "name": "High Score NFT!",
+  "symbol": "HS",
+  "description": "Congrats!",
+  "image": "https://bronze-circular-anteater-873.mypinata.cloud/ipfs/bafkreiezmyxyvcd75sovifpigjc2vwdnrlvpzlko33ovsp5uplsoutcepa",
+  "edition": 1,
+  "attributes": [
+    {
+      "trait_type": "Background",
+      "value": "Plane"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "1%"
+    },
+    {
+      "trait_type": "High Score",
+      "value": "0"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://bronze-circular-anteater-873.mypinata.cloud/ipfs/bafkreiezmyxyvcd75sovifpigjc2vwdnrlvpzlko33ovsp5uplsoutcepa",
+        "type": "image/jpg"
+      }
+    ],
+    "category": "image"
+  }
+}

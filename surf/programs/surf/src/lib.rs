@@ -15,9 +15,9 @@ use crate::instructions::{list_nft, ListNft};
 use crate::instructions::{mint_nft, MintNft};
 use crate::instructions::{update_nft, UpdateNft};
 use crate::instructions::{update_player, UpdatePlayer};
+use crate::states::custom_vector::MetadataField;
 
 declare_id!("4pzvADeMCm62GziZvTfEMTeoYnraQJJmN5tAdqd6ARSM");
-
 #[program]
 pub mod surf {
 
@@ -40,8 +40,11 @@ pub mod surf {
         uri: String,
         name: String,
         symbol: String,
+        is_high_score: bool,
+        high_score: Option<u64>,
+        metadata: Option<Vec<MetadataField>>,
     ) -> Result<()> {
-        mint_nft::mint_highest_score_nft(ctx, uri, name, symbol)
+        mint_nft::mint_nft(ctx, uri, name, symbol, is_high_score, high_score, metadata)
     }
 
     pub fn update_nft(ctx: Context<UpdateNft>, high_score: u64) -> Result<()> {

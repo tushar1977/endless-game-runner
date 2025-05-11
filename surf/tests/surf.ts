@@ -14,6 +14,7 @@ import {
   TOKEN_2022_PROGRAM_ID,
   getOrCreateAssociatedTokenAccount,
   getAccount,
+  getTokenMetadata,
 } from "@solana/spl-token";
 import { assert } from "chai";
 import BN from "bn.js";
@@ -21,11 +22,11 @@ import BN from "bn.js";
 describe("surf", () => {
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
-  const connection = new Connection("http://127.0.0.1:8899", "confirmed");
   const program = anchor.workspace.Surf as Program<Surf>;
   const name = "Bearer";
   const symbol = "BE";
-  const uri = "https://arweave.net/MHK3Iopy0GgvDoM7LkkiAdg7pQqExuuWvedApCnzfj0";
+  const uri = "https://bronze-circular-anteater-873.mypinata.cloud/ipfs/bafkreicqxfgqgujfk3selkf64v4llacajnkgdleh3eyjxpl2tz4gvcp2hy";
+
   const generatePDA = (
     label: string,
     seed?: PublicKey,
@@ -132,7 +133,7 @@ describe("surf", () => {
     }
   });
 
-  it('Mint nft!', async () => {
+  it('Mint High score nft!', async () => {
     const mint = new Keypair();
     console.log('Mint public key', mint.publicKey.toBase58());
     const destinationTokenAccount = getAssociatedTokenAddressSync(
@@ -144,22 +145,21 @@ describe("surf", () => {
     );
     getOrCreateAssociatedTokenAccount;
     console.log(`dest token acc ${destinationTokenAccount}`)
-    const uri = "https://arweave.net/MHK3Iopy0GgvDoM7LkkiAdg7pQqExuuWvedApCnzfj0";
     const tx = await program.methods
-      .mintNft(uri, name, symbol)
+      .mintNft(uri, name, symbol, true, new BN(2222), null)
       .accounts({
         signer: provider.wallet.publicKey,
         player: playerPDA,
+        wallet: walletPDA,
         tokenAccount: destinationTokenAccount,
         nftAuthority: nftPDA,
-        wallet: walletPDA,
         mint: mint.publicKey,
         tokenProgram: TOKEN_2022_PROGRAM_ID,
       })
       .signers([mint])
       .rpc();
 
-    console.log('Mint nft tx', tx);
+    console.log("NFT minted in transaction:", tx);
     await provider.connection.confirmTransaction(tx, 'confirmed');
 
     const tokenAccountInfo = await getAccount(
@@ -171,6 +171,55 @@ describe("surf", () => {
     assert.strictEqual(tokenAccountInfo.amount.toString(), '1', 'Token account should hold 1 NFT');
     assert.ok(tokenAccountInfo.owner.equals(provider.wallet.publicKey), 'Token account owner mismatch');
     assert.ok(tokenAccountInfo.mint.equals(mint.publicKey), 'Token account mint mismatch');
+    const metadata = await getTokenMetadata(provider.connection, mint.publicKey)
+    console.log(metadata)
+  });
+
+  it('Mint Skin nft!', async () => {
+    const mint = new Keypair();
+    console.log('Mint public key', mint.publicKey.toBase58());
+    const destinationTokenAccount = getAssociatedTokenAddressSync(
+      mint.publicKey,
+      provider.wallet.publicKey,
+      false,
+      TOKEN_2022_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+    );
+    const metadataVec = [
+      { key: "bg", value: "ff" },
+      { key: "fgg", value: "ff" },
+      { key: "speed", value: "fast" },
+    ];
+    getOrCreateAssociatedTokenAccount;
+    console.log(`dest token acc ${destinationTokenAccount}`)
+    const tx = await program.methods
+      .mintNft(uri, name, symbol, false, null, metadataVec)
+      .accounts({
+        signer: provider.wallet.publicKey,
+        player: playerPDA,
+        wallet: walletPDA,
+        tokenAccount: destinationTokenAccount,
+        nftAuthority: nftPDA,
+        mint: mint.publicKey,
+        tokenProgram: TOKEN_2022_PROGRAM_ID,
+      })
+      .signers([mint])
+      .rpc();
+
+    console.log("NFT minted in transaction:", tx);
+    await provider.connection.confirmTransaction(tx, 'confirmed');
+
+    const tokenAccountInfo = await getAccount(
+      provider.connection,
+      destinationTokenAccount,
+      undefined,
+      TOKEN_2022_PROGRAM_ID
+    );
+    assert.strictEqual(tokenAccountInfo.amount.toString(), '1', 'Token account should hold 1 NFT');
+    assert.ok(tokenAccountInfo.owner.equals(provider.wallet.publicKey), 'Token account owner mismatch');
+    assert.ok(tokenAccountInfo.mint.equals(mint.publicKey), 'Token account mint mismatch');
+    const metadata = await getTokenMetadata(provider.connection, mint.publicKey)
+    console.log(metadata)
   });
   it('Updates NFT with New High Score', async () => {
     const mint = new Keypair();
@@ -185,7 +234,7 @@ describe("surf", () => {
 
 
     const tx = await program.methods
-      .mintNft(uri, name, symbol)
+      .mintNft(uri, name, symbol, true, new BN(2400), null)
       .accounts({
         signer: provider.wallet.publicKey,
         player: playerPDA,
@@ -213,7 +262,12 @@ describe("surf", () => {
       .rpc();
 
     console.log("Done")
+
+    const metadata = await getTokenMetadata(provider.connection, mint.publicKey)
+    console.log(metadata)
   });
+
+
   it('List NFT for sale and buy it with detailed logging', async () => {
     console.log("\n=== NFT Marketplace Flow ===");
     const lamportsToSol = (lamports: number) => {
@@ -234,8 +288,13 @@ describe("surf", () => {
     );
     console.log('Seller token account:', sellerTokenAccount.toBase58());
 
+    const metadataVec = [
+      { key: "bg", value: "ff" },
+      { key: "fgg", value: "ff" },
+      { key: "speed", value: "fast" },
+    ];
     const mintTx = await program.methods
-      .mintNft(uri, name, symbol)
+      .mintNft(uri, name, symbol, false, null, metadataVec)
       .accounts({
         signer: provider.wallet.publicKey,
         player: playerPDA,
@@ -265,16 +324,20 @@ describe("surf", () => {
     });
     assert.equal(sellerTokenAccountInfo.amount.toString(), "1", "Seller should have 1 token initially");
 
+    let player = await program.account.playerProfile.fetch(playerPDA);
+    console.log("Player skined owned", player.skinsOwned)
+    console.log(player)
+    const mintPublicKey = new PublicKey(player.skinsOwned[1]);
     // Step 2: List NFT for sale
     console.log("\n--- Step 2: Listing NFT for sale ---");
     const [escrowPDA] = PublicKey.findProgramAddressSync(
-      [Buffer.from("escrow"), provider.wallet.publicKey.toBuffer(), mint.publicKey.toBuffer()],
+      [Buffer.from("escrow"), provider.wallet.publicKey.toBuffer(), mintPublicKey.toBuffer()],
       program.programId
     );
     console.log('Escrow PDA:', escrowPDA.toBase58());
-
+    console.log('Mint pub', mintPublicKey)
     const escrowTokenAccount = getAssociatedTokenAddressSync(
-      mint.publicKey,
+      mintPublicKey,
       escrowPDA,
       true,
       TOKEN_2022_PROGRAM_ID,
@@ -284,7 +347,7 @@ describe("surf", () => {
 
     const price = new anchor.BN(1_000_000_000); // 1 SOL
     console.log(`Listing NFT for price: ${price.toString()} lamports (${price.div(new BN(1_000_000_000)).toString()} SOL)`);
-
+    console.log(mintPublicKey.toJSON())
     // List NFT
     const listTx = await program.methods
       .listNft(price)
@@ -292,8 +355,7 @@ describe("surf", () => {
         signer: provider.wallet.publicKey,
         player: playerPDA,
         wallet: walletPDA,
-        mint: mint.publicKey,
-        skinToList: mint.publicKey,
+        skinToList: mintPublicKey,
         skinToListTokenAccount: sellerTokenAccount,
         escrow: escrowPDA,
         escrowTokenAccount: escrowTokenAccount,
@@ -324,7 +386,8 @@ describe("surf", () => {
     assert.ok(escrowAccountInfo.owner.equals(escrowPDA), 'Escrow account owner mismatch');
     assert.ok(escrowAccountInfo.mint.equals(mint.publicKey), 'Escrow account mint mismatch');
     console.log("✓ NFT listed successfully");
-
+    player = await program.account.playerProfile.fetch(playerPDA)
+    console.log(player)
     // Check seller's token account after listing
     const sellerTokenAccountAfterListing = await getAccount(
       provider.connection,
@@ -357,9 +420,8 @@ describe("surf", () => {
       TOKEN_2022_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
-
+    console.log("Buyer pub key", buyer.publicKey.toBase58())
     console.log('Buyer token account:', buyerTokenAccount.toBase58());
-
     const buyerTokenAccountBefore = await getAccount(
       provider.connection,
       buyerTokenAccount,
