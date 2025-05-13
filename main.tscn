@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dr6nxs5677j7t"]
+[gd_scene load_steps=13 format=3 uid="uid://dr6nxs5677j7t"]
 
 [ext_resource type="PackedScene" uid="uid://c26vq072xpc07" path="res://player.tscn" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://d0djst5rpaqou" path="res://scripts/main.gd" id="1_h2yge"]
@@ -23,11 +23,6 @@ sky = SubResource("Sky_wglf0")
 [sub_resource type="ViewportTexture" id="ViewportTexture_1bvp3"]
 viewport_path = NodePath("Player/CoinsScreen/SubViewport")
 
-[sub_resource type="LabelSettings" id="LabelSettings_lquwl"]
-font_size = 15
-font_color = Color(0.360784, 1, 1, 1)
-shadow_size = 5
-
 [sub_resource type="LabelSettings" id="LabelSettings_1bvp3"]
 
 [sub_resource type="GDScript" id="GDScript_h2yge"]
@@ -43,16 +38,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 "
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_7mycd"]
-viewport_path = NodePath("StartScreen/start/SubViewport")
-
-[sub_resource type="SystemFont" id="SystemFont_7mycd"]
-
-[sub_resource type="LabelSettings" id="LabelSettings_272bh"]
-font = SubResource("SystemFont_7mycd")
-font_size = 50
-font_color = Color(0.870181, 0, 0.21212, 1)
 
 [node name="main" type="Node3D"]
 script = ExtResource("1_h2yge")
@@ -82,7 +67,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.27775, 38.3009)
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.0215888, -1.08666, -62.8569)
 
 [node name="CoinsScreen" type="Sprite3D" parent="Player"]
-transform = Transform3D(-0.666667, 0, 5.82818e-08, 3.14775e-09, 0.665694, 0.0360061, -5.81968e-08, 0.0360061, -0.665694, -4.00397, -0.955354, 0.581314)
+transform = Transform3D(-0.666667, 0, -5.82819e-08, 0, 0.666667, 0, 5.82819e-08, 0, -0.666667, -4.00397, -0.955354, 0.581314)
 texture = SubResource("ViewportTexture_1bvp3")
 
 [node name="SubViewport" type="SubViewport" parent="Player/CoinsScreen"]
@@ -99,17 +84,9 @@ offset_right = -15.944
 offset_bottom = -31.272
 theme_override_constants/separation = 10
 
-[node name="TotalScore" type="Label" parent="Player/CoinsScreen/SubViewport/HBoxContainer"]
-layout_mode = 2
-text = "Total Coins :-"
-label_settings = SubResource("LabelSettings_lquwl")
-horizontal_alignment = 1
-vertical_alignment = 1
-uppercase = true
-
 [node name="Score" type="Label" parent="Player/CoinsScreen/SubViewport/HBoxContainer"]
 layout_mode = 2
-text = "0"
+text = "Coins: 0"
 label_settings = SubResource("LabelSettings_1bvp3")
 
 [node name="Marker3D" type="Marker3D" parent="."]
@@ -121,38 +98,3 @@ script = SubResource("GDScript_h2yge")
 
 [node name="Marker3D3" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0438163, -1.02813, -63.0298)
-
-[node name="StartScreen" type="Sprite3D" parent="."]
-transform = Transform3D(-0.999997, 0, 0.00242606, 0, 1, 0, -0.00242606, 0, -0.999997, 3.87945, 0.738375, -58.1289)
-texture = SubResource("ViewportTexture_7mycd")
-
-[node name="start" type="CanvasLayer" parent="StartScreen"]
-
-[node name="SubViewport" type="SubViewport" parent="StartScreen/start"]
-transparent_bg = true
-size = Vector2i(1920, 1080)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="StartScreen/start/SubViewport"]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 203.0
-offset_top = -17.0
-offset_right = 452.0
-offset_bottom = 140.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 10
-alignment = 1
-
-[node name="Label" type="Label" parent="StartScreen/start/SubViewport/VBoxContainer"]
-layout_mode = 2
-text = "WELCOME"
-label_settings = SubResource("LabelSettings_272bh")
-
-[node name="Button" type="Button" parent="StartScreen/start/SubViewport/VBoxContainer"]
-layout_mode = 2
-text = "Start Game!
-"

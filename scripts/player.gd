@@ -3,10 +3,17 @@ extends CharacterBody3D
 @onready var animation_tree: AnimationTree = $AnimationTree
 
 var SPEED = 5.0
-const JUMP_VELOCITY = 8
+
+const JUMP_VELOCITY = 10
+const DEATH = preload("res://DeathScreen.tscn")
 
 var direction_changed: bool
 var vertical_action_performed: bool
+func _on_obstacle_hit() -> void:
+	SPEED = 0.0
+	get_tree().paused = true
+	get_tree().change_scene_to_packed(DEATH)
+
 
 
 func _physics_process(delta: float) -> void:
@@ -18,6 +25,11 @@ func _physics_process(delta: float) -> void:
 	velocity.x = 0 
 
 	move_and_slide()
+	
+	for i in range(get_slide_collision_count()):
+		var collision = get_slide_collision(i)
+		if collision.get_collider().collision_layer == 2:
+			_on_obstacle_hit()
 	handle_animations()
 
 

@@ -2,11 +2,15 @@ extends Node3D
 
 @onready var player: CharacterBody3D = $Player
 @onready var positions: Array[Marker3D] = [$Marker3D2, $Marker3D3, $Marker3D]  
+
 @onready var coin_label: Label = $Player/CoinsScreen/SubViewport/HBoxContainer/Score
 @onready var death_screen = $DeathScreen
 @onready var start_screen: Label = $StartScreen/start/SubViewport/VBoxContainer/Label
 @onready var start_button: Button = $StartScreen/start/SubViewport/VBoxContainer/Button
 
+
+
+@onready var http = $HTTPRequest
 
 
 
@@ -30,21 +34,17 @@ var speed: float = base_speed
 var score: int = 0
 var is_dead: bool = false
 
-
-
-
-
-
 var player_base_y: float
 
-func _ready():
 	
-	start_screen.visible = true
-	get_tree().paused = true  # Pause the game logic
+
+func _ready() -> void:
+
 	
 	initialize_player()
 	player_base_y = player.global_position.y
 	spawn_initial_platforms()
+
 	player.connect("player_died", Callable(self, "_on_player_died"))
 
 
@@ -53,6 +53,7 @@ func _on_player_died():
 	speed = 0
 	player.velocity = Vector3.ZERO
 	death_screen.visible = true
+
 
 
 func _process(delta: float) -> void:
