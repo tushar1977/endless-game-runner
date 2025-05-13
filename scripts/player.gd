@@ -11,7 +11,6 @@ var direction_changed: bool
 var vertical_action_performed: bool
 func _on_obstacle_hit() -> void:
 	SPEED = 0.0
-	get_tree().paused = true
 	get_tree().change_scene_to_packed(DEATH)
 
 
