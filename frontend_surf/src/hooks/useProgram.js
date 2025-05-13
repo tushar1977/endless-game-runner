@@ -22,4 +22,4 @@ const useProgram = () => {
   return getProgram();
 };
 
-export default useProgram;
+export { useProgram };

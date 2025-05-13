@@ -12,6 +12,10 @@ pub fn buy_nft(ctx: Context<BuyNFT>) -> Result<()> {
         ctx.accounts.escrow_token_account.amount > 0,
         CustomErrors::EscrowTokenBalanceZero
     );
+    require!(
+        ctx.accounts.buyer.key() != ctx.accounts.seller.key(),
+        CustomErrors::EscrowTokenBalanceZero
+    );
     let cpi_program = ctx.accounts.token_program.to_account_info();
 
     // Transfer NFT from escrow to buyer

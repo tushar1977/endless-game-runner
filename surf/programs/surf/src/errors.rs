@@ -25,4 +25,6 @@ pub enum CustomErrors {
     InvalidEscrowProgram,
     #[msg("Token amount less than 0")]
     EscrowTokenBalanceZero,
+    #[msg("You cannot buy your own nft!")]
+    BuyNFT,
 }

@@ -514,6 +514,11 @@
       "code": 6011,
       "name": "EscrowTokenBalanceZero",
       "msg": "Token amount less than 0"
+    },
+    {
+      "code": 6012,
+      "name": "BuyNFT",
+      "msg": "You cannot buy your own nft!"
     }
   ],
   "metadata": {

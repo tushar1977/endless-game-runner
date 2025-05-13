@@ -3,7 +3,6 @@ import { Connection, PublicKey, sendAndConfirmRawTransaction, SystemProgram, Tra
 import { TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, getOrCreateAssociatedTokenAccount, getAccount, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import * as anchor from '@project-serum/anchor';
 
-const RPC = "https://api.devnet.solana.com"
 const ListNftButton = ({ program, publicKey, signTransaction, connection, profile }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -84,7 +83,6 @@ const ListNftButton = ({ program, publicKey, signTransaction, connection, profil
       const price = new anchor.BN(1_000_000_000);
       console.log("Listing price:", price.toString());
 
-      // THIS IS THE FIX - Pass the mint directly, not as toJSON()
       const ix = await program.methods
         .listNft(price)
         .accounts({
