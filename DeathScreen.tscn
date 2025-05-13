@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bya3xk7m6mbtg" path="res://end_game.gd" id="1_58ct5"]
 
 [sub_resource type="SystemFont" id="SystemFont_s4vtk"]
+subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_58ct5"]
 font = SubResource("SystemFont_s4vtk")
@@ -42,8 +43,8 @@ text = "Retry
 layout_mode = 2
 text = "Quit"
 
-[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_button_pressed"]
-[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_start_pressed"]
 [connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_retry_pressed"]
+[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_start_pressed"]
+[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_button_pressed"]
 [connection signal="pressed" from="EndGame/quit" to="EndGame" method="_on_quit_pressed"]
 [connection signal="pressed" from="EndGame/quit" to="EndGame" method="_on_button_pressed"]
