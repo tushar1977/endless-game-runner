@@ -5,13 +5,17 @@ extends CharacterBody3D
 var SPEED = 5.0
 
 const JUMP_VELOCITY = 10
-const DEATH = preload("res://DeathScreen.tscn")
+const DEATH = "res://DeathScreen.tscn"
 
 var direction_changed: bool
 var vertical_action_performed: bool
+
 func _on_obstacle_hit() -> void:
-	SPEED = 0.0
-	get_tree().change_scene_to_packed(DEATH)
+	call_deferred("_go_to_death_scene")
+
+func _go_to_death_scene() -> void:
+	if get_tree() != null:
+		get_tree().change_scene_to_file(DEATH)
 
 
 

@@ -42,7 +42,7 @@ text = "Start Game!
 layout_mode = 2
 text = "Quit"
 
-[connection signal="pressed" from="StartGame/start" to="StartGame" method="_on_start_pressed"]
 [connection signal="pressed" from="StartGame/start" to="StartGame" method="_on_button_pressed"]
+[connection signal="pressed" from="StartGame/start" to="StartGame" method="_on_start_pressed"]
 [connection signal="pressed" from="StartGame/quit" to="StartGame" method="_on_quit_pressed"]
 [connection signal="pressed" from="StartGame/quit" to="StartGame" method="_on_button_pressed"]

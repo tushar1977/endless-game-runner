@@ -42,7 +42,7 @@ text = "Retry
 layout_mode = 2
 text = "Quit"
 
-[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_start_pressed"]
 [connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_button_pressed"]
+[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_start_pressed"]
 [connection signal="pressed" from="EndGame/quit" to="EndGame" method="_on_quit_pressed"]
 [connection signal="pressed" from="EndGame/quit" to="EndGame" method="_on_button_pressed"]

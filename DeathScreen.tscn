@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://4kttw5v33wv5"]
+[gd_scene load_steps=5 format=3 uid="uid://4kttw5v33wv5"]
 
 [ext_resource type="Script" uid="uid://bya3xk7m6mbtg" path="res://end_game.gd" id="1_58ct5"]
 
@@ -9,6 +9,9 @@ subpixel_positioning = 0
 font = SubResource("SystemFont_s4vtk")
 font_size = 50
 font_color = Color(0.870181, 0, 0.21212, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_80igo"]
+font_size = 25
 
 [node name="DeathScreen" type="Node2D"]
 
@@ -29,22 +32,36 @@ theme_override_constants/separation = 10
 alignment = 1
 script = ExtResource("1_58ct5")
 
-[node name="Label" type="Label" parent="EndGame"]
+[node name="Died" type="Label" parent="EndGame"]
 layout_mode = 2
 text = "YOU DIED!"
 label_settings = SubResource("LabelSettings_58ct5")
+
+[node name="Label2" type="Label" parent="EndGame"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_80igo")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="start" type="Button" parent="EndGame"]
 layout_mode = 2
 text = "Retry
 "
 
+[node name="mint_nft" type="Button" parent="EndGame"]
+layout_mode = 2
+text = "Mint/Update NFT!"
+
+[node name="HTTPRequest" type="HTTPRequest" parent="EndGame/mint_nft"]
+
 [node name="quit" type="Button" parent="EndGame"]
 layout_mode = 2
 text = "Quit"
 
 [connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_retry_pressed"]
-[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_start_pressed"]
 [connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_button_pressed"]
+[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_start_pressed"]
+[connection signal="pressed" from="EndGame/mint_nft" to="EndGame" method="_on_mint_nft_pressed"]
+[connection signal="request_completed" from="EndGame/mint_nft/HTTPRequest" to="EndGame" method="_on_http_request_request_completed"]
 [connection signal="pressed" from="EndGame/quit" to="EndGame" method="_on_quit_pressed"]
 [connection signal="pressed" from="EndGame/quit" to="EndGame" method="_on_button_pressed"]
