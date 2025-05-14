@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://fuwdxslii748" path="res://scripts/menu.gd" id="1_s4vtk"]
 
 [sub_resource type="SystemFont" id="SystemFont_s4vtk"]
+subpixel_positioning = 0
 
 [sub_resource type="LabelSettings" id="LabelSettings_d4clo"]
 font = SubResource("SystemFont_s4vtk")
@@ -38,11 +39,5 @@ layout_mode = 2
 text = "Start Game!
 "
 
-[node name="quit" type="Button" parent="StartGame"]
-layout_mode = 2
-text = "Quit"
-
 [connection signal="pressed" from="StartGame/start" to="StartGame" method="_on_button_pressed"]
 [connection signal="pressed" from="StartGame/start" to="StartGame" method="_on_start_pressed"]
-[connection signal="pressed" from="StartGame/quit" to="StartGame" method="_on_quit_pressed"]
-[connection signal="pressed" from="StartGame/quit" to="StartGame" method="_on_button_pressed"]
