@@ -4,6 +4,7 @@ import { useProgram } from './hooks/useProgram';
 
 import GamingWebsite from './GamingWebsite';
 import NFTAdminPanel from './components/NFTAdminPanel';
+import GameView from './components/game';
 import Marketplace from './Marketplace';
 import PlayerProfile from './Profile';
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/profile" element={<PlayerProfile program={program} />} />
         <Route path="/list" element={<MyNFTsView program={program} connection={connection} />} />
         <Route path="/airdrop" element={<DevnetFaucet />} />
+        <Route path="/game" element={<GameView />} />
       </Routes>
     </Router>
   );
