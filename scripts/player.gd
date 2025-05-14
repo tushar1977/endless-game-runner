@@ -2,7 +2,7 @@ extends CharacterBody3D
 
 @onready var animation_tree: AnimationTree = $AnimationTree
 
-var SPEED = 5.0
+var SPEED = 10
 
 const JUMP_VELOCITY = 10
 const DEATH = "res://DeathScreen.tscn"
