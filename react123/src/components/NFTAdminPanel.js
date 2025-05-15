@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Copy, ChevronDown, ChevronUp, Download, Maximize2, Info, Heart, BarChart3, Share2 } from 'lucide-react';
 import './NFTAdminPanel.css';
 
+
 const NFTAdminPanel = () => {
   const [expandedSections, setExpandedSections] = useState({
     details: true,
@@ -67,8 +68,64 @@ const NFTAdminPanel = () => {
   //   };
   // };
   return (
-    
-
+   
+     <div className="bg-gray-900 text-white min-h-screen">
+      {/* Navbar */}
+      <nav className="bg-gray-800 border-b border-gray-700">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center">
+              {/* Logo */}
+              <div className="flex-shrink-0 flex items-center">
+                <svg className="h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+                <span className="ml-2 text-xl font-bold">NFT Vault</span>
+              </div>
+              
+              {/* Desktop Navigation */}
+              <div className="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+                <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-white bg-gray-900">Home</a>
+                <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Explore</a>
+                <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Collections</a>
+                <a href="#" className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Admin</a>
+              </div>
+            </div>
+            
+            {/* Mobile menu button */}
+            <div className="flex items-center md:hidden">
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"
+              >
+                {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+            
+            {/* User profile section */}
+            <div className="hidden md:flex md:items-center">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">Connect Wallet</button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Mobile menu, show/hide based on menu state */}
+        {mobileMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-900">Home</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Explore</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Collections</a>
+              <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Admin</a>
+            </div>
+            <div className="pt-4 pb-3 border-t border-gray-700">
+              <div className="flex items-center px-5">
+                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">Connect Wallet</button>
+              </div>
+            </div>
+          </div>
+        )}
+     </nav>
     <div className="bg-gray-900 text-white min-h-screen p-4 md:p-6">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
