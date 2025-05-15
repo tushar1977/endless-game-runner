@@ -1,7 +1,6 @@
 extends VBoxContainer
 
 const WORLD = preload("res://main.tscn")
-const MENU = preload("res://StartScreen.tscn")
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()

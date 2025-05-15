@@ -1,61 +1,82 @@
-[gd_scene load_steps=5 format=3 uid="uid://4kttw5v33wv5"]
+[gd_scene load_steps=7 format=3 uid="uid://dmixrqy283q8p"]
 
 [ext_resource type="Script" uid="uid://bya3xk7m6mbtg" path="res://end_game.gd" id="1_58ct5"]
 
 [sub_resource type="SystemFont" id="SystemFont_s4vtk"]
 subpixel_positioning = 0
 
-[sub_resource type="LabelSettings" id="LabelSettings_58ct5"]
+[sub_resource type="LabelSettings" id="LabelSettings_ggdq4"]
 font = SubResource("SystemFont_s4vtk")
 font_size = 50
 font_color = Color(0.870181, 0, 0.21212, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_80igo"]
+[sub_resource type="LabelSettings" id="LabelSettings_tj3vn"]
 font_size = 25
 
-[node name="DeathScreen" type="Node2D"]
+[sub_resource type="LabelSettings" id="LabelSettings_58ct5"]
+font_size = 25
 
-[node name="EndGame" type="VBoxContainer" parent="."]
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
+[sub_resource type="LabelSettings" id="LabelSettings_80igo"]
+font_size = 30
+
+[node name="DeathScreen2" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = 457.0
-offset_top = 236.0
-offset_right = 704.0
-offset_bottom = 387.0
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 10
-alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -124.5
+offset_top = -89.0
+offset_right = 124.5
+offset_bottom = 89.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
 script = ExtResource("1_58ct5")
 
-[node name="Died" type="Label" parent="EndGame"]
+[node name="Died" type="Label" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 6
 text = "YOU DIED!"
-label_settings = SubResource("LabelSettings_58ct5")
+label_settings = SubResource("LabelSettings_ggdq4")
 
-[node name="Label2" type="Label" parent="EndGame"]
+[node name="Label2" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-label_settings = SubResource("LabelSettings_80igo")
+size_flags_vertical = 6
+label_settings = SubResource("LabelSettings_tj3vn")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="start" type="Button" parent="EndGame"]
+[node name="retry" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 6
 text = "Retry
 "
 
-[node name="mint_nft" type="Button" parent="EndGame"]
+[node name="mint_nft" type="Button" parent="VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 6
 text = "Mint/Update NFT!"
 
-[node name="HTTPRequest" type="HTTPRequest" parent="EndGame/mint_nft"]
+[node name="HTTPRequest" type="HTTPRequest" parent="VBoxContainer/mint_nft"]
 
-[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_retry_pressed"]
-[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_button_pressed"]
-[connection signal="pressed" from="EndGame/start" to="EndGame" method="_on_start_pressed"]
-[connection signal="pressed" from="EndGame/mint_nft" to="EndGame" method="_on_mint_nft_pressed"]
-[connection signal="request_completed" from="EndGame/mint_nft/HTTPRequest" to="EndGame" method="_on_http_request_request_completed"]
+[node name="Wallet" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_58ct5")
+
+[node name="error" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+label_settings = SubResource("LabelSettings_80igo")
+
+[connection signal="pressed" from="VBoxContainer/retry" to="VBoxContainer" method="_on_retry_pressed"]
+[connection signal="pressed" from="VBoxContainer/mint_nft" to="VBoxContainer" method="_on_mint_nft_pressed"]
+[connection signal="request_completed" from="VBoxContainer/mint_nft/HTTPRequest" to="VBoxContainer" method="_on_http_request_request_completed"]

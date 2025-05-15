@@ -67,7 +67,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.27775, 38.3009)
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.0215888, -1.08666, -62.8569)
 
 [node name="CoinsScreen" type="Sprite3D" parent="Player"]
-transform = Transform3D(-0.666667, 0, -5.82819e-08, 0, 0.666667, 0, 5.82819e-08, 0, -0.666667, -4.26162, -0.955354, 0.581314)
+transform = Transform3D(-0.666667, 0, -1.00664e-07, 0, 0.666667, 0, 1.00664e-07, 0, -0.666667, -4.23224, -1.36108, 0.581001)
 texture = SubResource("ViewportTexture_1bvp3")
 
 [node name="SubViewport" type="SubViewport" parent="Player/CoinsScreen"]
@@ -76,13 +76,13 @@ size = Vector2i(1920, 1080)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Player/CoinsScreen/SubViewport"]
 anchors_preset = -1
-anchor_right = 0.322
-anchor_bottom = 0.164
-offset_left = 20.0
-offset_top = 23.0
-offset_right = -15.944
-offset_bottom = -31.272
+anchor_right = 1.0
+anchor_bottom = 0.0354938
+grow_horizontal = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
 theme_override_constants/separation = 10
+metadata/_edit_use_anchors_ = true
 
 [node name="Score" type="Label" parent="Player/CoinsScreen/SubViewport/HBoxContainer"]
 layout_mode = 2
