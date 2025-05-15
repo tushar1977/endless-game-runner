@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Copy, ChevronDown, ChevronUp, Download, Maximize2, Info, Heart, BarChart3, Share2 } from 'lucide-react';
-
+import './NFTAdminPanel.css';
 
 const NFTAdminPanel = () => {
   const [expandedSections, setExpandedSections] = useState({
