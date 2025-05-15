@@ -1,6 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://dmixrqy283q8p"]
+[gd_scene load_steps=9 format=3 uid="uid://4kttw5v33wv5"]
 
 [ext_resource type="Script" uid="uid://bya3xk7m6mbtg" path="res://end_game.gd" id="1_58ct5"]
+[ext_resource type="Texture2D" uid="uid://gnield7uuxd2" path="res://assets/3226276.jpg" id="1_80igo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gircr"]
+bg_color = Color(0.121569, 0.12549, 0.282353, 0.643137)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.46273, 0.550617, 0.919837, 1)
+border_blend = true
+shadow_color = Color(0.338549, 0.12237, 0.29892, 0.6)
+shadow_size = 32
+shadow_offset = Vector2(10, 10)
 
 [sub_resource type="SystemFont" id="SystemFont_s4vtk"]
 subpixel_positioning = 0
@@ -27,56 +40,79 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="3226276" type="Sprite2D" parent="."]
+position = Vector2(593, 336)
+scale = Vector2(0.395, 0.355)
+texture = ExtResource("1_80igo")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 332.0
+offset_top = 163.0
+offset_right = 837.0
+offset_bottom = 492.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_gircr")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -124.5
-offset_top = -89.0
-offset_right = 124.5
-offset_bottom = 89.0
+offset_left = -239.5
+offset_top = -146.5
+offset_right = 237.5
+offset_bottom = 153.5
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 8
+size_flags_horizontal = 4
+size_flags_vertical = 4
+size_flags_stretch_ratio = 4.45
+theme_override_constants/separation = 0
+alignment = 1
 script = ExtResource("1_58ct5")
 
-[node name="Died" type="Label" parent="VBoxContainer"]
+[node name="Died" type="Label" parent="Panel/VBoxContainer"]
+modulate = Color(0.83817, 0.389506, 1, 0.858824)
+self_modulate = Color(0.933333, 0.835294, 0.964706, 0.807843)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 6
+theme_override_colors/font_color = Color(0.698039, 0, 0.498039, 0.8)
+theme_override_colors/font_shadow_color = Color(0.322624, 0.295146, 0.458586, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 text = "YOU DIED!"
 label_settings = SubResource("LabelSettings_ggdq4")
 
-[node name="Label2" type="Label" parent="VBoxContainer"]
+[node name="Label2" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
 label_settings = SubResource("LabelSettings_tj3vn")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="retry" type="Button" parent="VBoxContainer"]
+[node name="retry" type="Button" parent="Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Retry
 "
 
-[node name="mint_nft" type="Button" parent="VBoxContainer"]
+[node name="mint_nft" type="Button" parent="Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 6
 text = "Mint/Update NFT!"
 
-[node name="HTTPRequest" type="HTTPRequest" parent="VBoxContainer/mint_nft"]
+[node name="HTTPRequest" type="HTTPRequest" parent="Panel/VBoxContainer/mint_nft"]
 
-[node name="Wallet" type="Label" parent="VBoxContainer"]
+[node name="Wallet" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
 label_settings = SubResource("LabelSettings_58ct5")
 
-[node name="error" type="Label" parent="VBoxContainer"]
+[node name="error" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
 label_settings = SubResource("LabelSettings_80igo")
 
-[connection signal="pressed" from="VBoxContainer/retry" to="VBoxContainer" method="_on_retry_pressed"]
-[connection signal="pressed" from="VBoxContainer/mint_nft" to="VBoxContainer" method="_on_mint_nft_pressed"]
-[connection signal="request_completed" from="VBoxContainer/mint_nft/HTTPRequest" to="VBoxContainer" method="_on_http_request_request_completed"]
+[connection signal="pressed" from="Panel/VBoxContainer/retry" to="Panel/VBoxContainer" method="_on_retry_pressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/mint_nft" to="Panel/VBoxContainer" method="_on_mint_nft_pressed"]
+[connection signal="request_completed" from="Panel/VBoxContainer/mint_nft/HTTPRequest" to="Panel/VBoxContainer" method="_on_http_request_request_completed"]

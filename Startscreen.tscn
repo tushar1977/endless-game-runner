@@ -1,6 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://clm2px60cuj2n"]
+[gd_scene load_steps=6 format=3 uid="uid://cpft7atys6hcx"]
 
 [ext_resource type="Script" uid="uid://fuwdxslii748" path="res://scripts/menu.gd" id="1_hyom3"]
+[ext_resource type="Texture2D" uid="uid://bvfi03sstkrqn" path="res://assets/6154836.jpg" id="1_rr0tx"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_rr0tx"]
+blend_mode = 1
+
+[sub_resource type="FontVariation" id="FontVariation_6j25d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_hyom3"]
 font_size = 50
@@ -13,29 +19,67 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
+[node name="6154836" type="Sprite2D" parent="."]
+position = Vector2(578, 322)
+scale = Vector2(0.383333, 0.324)
+texture = ExtResource("1_rr0tx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="6154836"]
+texture_filter = 3
+material = SubResource("CanvasItemMaterial_rr0tx")
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -130.5
-offset_top = -52.0
-offset_right = 130.5
-offset_bottom = 52.0
+offset_left = -1726.96
+offset_top = -1194.44
+offset_right = -1239.96
+offset_bottom = -817.444
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 8
+size_flags_horizontal = 4
+size_flags_vertical = 4
+size_flags_stretch_ratio = 3.32
+alignment = 1
 script = ExtResource("1_hyom3")
 
-[node name="Label" type="Label" parent="VBoxContainer"]
-layout_mode = 2
+[node name="start" type="Button" parent="6154836"]
+offset_left = -164.348
+offset_top = 24.6913
+offset_right = -2.34785
+offset_bottom = 93.6913
+scale = Vector2(2, 2)
+size_flags_vertical = 4
+size_flags_stretch_ratio = 4.48
+theme_override_colors/font_hover_pressed_color = Color(0.647471, 0.405671, 0.638273, 1)
+theme_override_colors/font_hover_color = Color(0.490713, 0.237981, 0.490583, 1)
+theme_override_colors/icon_hover_pressed_color = Color(0.22943, 0.203643, 0.531838, 1)
+theme_override_colors/icon_hover_color = Color(0.534732, 0.35443, 0.642709, 1)
+theme_override_colors/icon_pressed_color = Color(0.321586, 0.253645, 0.538892, 1)
+theme_override_colors/icon_focus_color = Color(0.534355, 0.266102, 0.503038, 1)
+theme_override_colors/icon_normal_color = Color(0.274134, 0.10338, 0.266044, 1)
+theme_override_colors/font_outline_color = Color(0.431012, 0.44212, 0.747516, 1)
+theme_override_colors/font_color = Color(0.647711, 0.541069, 0.885579, 1)
+theme_override_colors/font_focus_color = Color(0.365443, 0.322303, 0.545789, 1)
+theme_override_colors/font_pressed_color = Color(0.366299, 0.607955, 0.893743, 1)
+theme_override_fonts/font = SubResource("FontVariation_6j25d")
+text = "Start"
+text_overrun_behavior = 2
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="6154836"]
+offset_left = -284.348
+offset_top = -225.309
+offset_right = 297.652
+offset_bottom = 120.691
+theme_override_colors/font_color = Color(0.534732, 0.35443, 0.642709, 1)
+theme_override_colors/font_shadow_color = Color(0.611111, 0.459976, 0.785409, 1)
+theme_override_colors/font_outline_color = Color(0.00209913, 0.113461, 0.558794, 1)
+theme_override_font_sizes/font_size = 8
 text = "WELCOME!"
 label_settings = SubResource("LabelSettings_hyom3")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="start" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-text = "Start"
-
-[connection signal="pressed" from="VBoxContainer/start" to="VBoxContainer" method="_on_start_pressed"]
+[connection signal="pressed" from="6154836/start" to="6154836/VBoxContainer" method="_on_start_pressed"]
