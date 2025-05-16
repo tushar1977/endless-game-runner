@@ -153,8 +153,9 @@ function GamingWebsite() {
           <div className="container">
             {/* Logo */}
             <a className="navbar-brand logo-text" href="#">
-              <i className="fas fa-gamepad me-2"></i>
-              NEXUS
+             <img src="/logo.png" alt="NEXUS Logo" style={{ height: '65px' }} />
+              {/* <i className="fas fa-gamepad me-2"></i>
+              bhgh */}
             </a>
 
             {/* Mobile toggle button */}
@@ -172,14 +173,17 @@ function GamingWebsite() {
             <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
               <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
                 <li className="nav-item">
-                  <a className="nav-link px-3" href="#">About</a>
+                  <a className="nav-link px-3" href="#">Home</a>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link px-3" href="#">Play</a>
                 </li>
+                <li className="nav-item">
+                  <a className="nav-link px-3" href="#">Market</a>
+                </li>
                 <li className="nav-item ms-lg-3 mt-3 mt-lg-0">
                   <a className="btn btn-sign-in px-4 py-2" href="/nft">
-                    Admin
+                    Connect Wallet
                   </a>
                 </li>
               </ul>
