@@ -154,8 +154,8 @@ function GamingWebsite() {
             {/* Logo */}
             <a className="navbar-brand logo-text" href="#">
              <img src="/logo.png" alt="NEXUS Logo" style={{ height: '65px' }} />
-              {/* <i className="fas fa-gamepad me-2"></i>
-              bhgh */}
+              <i className="fas fa-gamepad me-2"></i>
+              Zypher<i>X</i>
             </a>
 
             {/* Mobile toggle button */}
@@ -179,7 +179,7 @@ function GamingWebsite() {
                   <a className="nav-link px-3" href="#">Play</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link px-3" href="#">Market</a>
+                  <a className="nav-link px-3" href="/marketplace">Market</a>
                 </li>
                 <li className="nav-item ms-lg-3 mt-3 mt-lg-0">
                   <a className="btn btn-sign-in px-4 py-2" href="/nft">
