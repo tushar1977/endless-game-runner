@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { getAssociatedTokenAddressSync, getTokenMetadata } from '@solana/spl-token';
@@ -162,76 +163,71 @@ const Logo = () => (
 );
 
 // Navigation Component
-const Navigation = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navbarRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+      if (navbarRef.current) {
+        if (window.scrollY > 50) {
+          navbarRef.current.classList.add('navbar-glass');
+        } else {
+          navbarRef.current.classList.remove('navbar-glass');
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="bg-gray-900 py-4 px-6 border-b border-gray-800">
-
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Logo />
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-6">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search NFTs..."
-              className="bg-gray-800 text-gray-300 px-4 py-2 rounded-full pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500 w-64"
-            />
-            <Search className="absolute left-3 top-2.5 text-gray-500 h-5 w-5" />
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <button className="text-gray-400 hover:text-white">
-              <Heart size={20} />
-            </button>
-            <button className="text-gray-400 hover:text-white">
-              <ShoppingCart size={20} />
-            </button>
-
-            <WalletMultiButton />
-          </div>
-        </div>
-
-        {/* Mobile menu button */}
+    <nav ref={navbarRef} className="navbar navbar-expand-lg fixed-top navbar-dark bg-transparent">
+      <div className="container">
+        {/* Logo */}
+        <a className="navbar-brand logo-text" href="#">
+          <img src="/logo.png" alt="NEXUS Logo" style={{ height: '65px' }} />
+          <i className="fas fa-gamepad me-2"></i>
+          Zypher<i>X</i>
+        </a>
         <button
-          className="md:hidden text-gray-400 hover:text-white"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="navbar-toggler"
+          type="button"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-expanded={isMenuOpen ? "true" : "false"}
         >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          <span className="navbar-toggler-icon"></span>
         </button>
-      </div>
 
-      {/* Mobile Navigation */}
-
-      {mobileMenuOpen && (
-        <div className="md:hidden mt-4 space-y-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search NFTs..."
-              className="bg-gray-800 text-gray-300 px-4 py-2 rounded-full pl-10 focus:outline-none focus:ring-2 focus:ring-purple-500 w-full"
-            />
-            <Search className="absolute left-3 top-2.5 text-gray-500 h-5 w-5" />
-          </div>
-
-          <div className="flex justify-around">
-            <button className="flex flex-col items-center text-gray-400 hover:text-white">
-              <Heart size={20} />
-              <span className="text-sm mt-1">Favorites</span>
-            </button>
-            <button className="flex flex-col items-center text-gray-400 hover:text-white">
-              <ShoppingCart size={20} />
-              <span className="text-sm mt-1">Cart</span>
-            </button>
-          </div>
+        {/* Navigation items */}
+        <div className={`collapse navbar-collapse ${isMenuOpen ? 'show' : ''}`}>
+          <ul className="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+            <li className="nav-item">
+              <a className="nav-link px-3" href="#">Home</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link px-3" href="/game">Play</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link px-3" href="/Marketplace">Market </a>
+            </li>
+            <li className="nav-item ms-lg-3 mt-3 mt-lg-0">
+              <a className="btn btn-sign-in px-4 py-2" href="/nft">
+                Connect Wallet
+              </a>
+            </li>
+          </ul>
         </div>
-      )}
-
+      </div>
     </nav>
   );
 };
+
+
 
 // Categories Component
 const Categories = () => {
@@ -264,8 +260,10 @@ export default function NFTMarketplace({ program }) {
     navigate(`/nft/${mintAddress}`, { state: { seller: seller } });
   };
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <Navigation />
+    <div style={{ paddingTop: '70px' }}
+      className="min-h-screen bg-gray-900 text-white">
+      <Navbar />
+
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">NFT Marketplace</h1>
@@ -275,13 +273,6 @@ export default function NFTMarketplace({ program }) {
           <ListedNfts program={program} viewDetails={viewDetails} />
         </div>
       </main>
-
-      <footer className="bg-gray-900 border-t border-gray-800 py-6 mt-12">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-          <Logo />
-          <p className="text-gray-500 text-sm">© 2025 CryptoGamers. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }
