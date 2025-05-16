@@ -2,7 +2,17 @@ import React, { useState } from 'react';
 import { Connection, PublicKey, sendAndConfirmRawTransaction, SystemProgram, Transaction } from "@solana/web3.js";
 import { TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddressSync, getOrCreateAssociatedTokenAccount, getAccount, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import * as anchor from '@project-serum/anchor';
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const navbarRef = useRef(null);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 const ListNftButton = ({ program, publicKey, signTransaction, connection, profile }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -120,6 +130,41 @@ const ListNftButton = ({ program, publicKey, signTransaction, connection, profil
     }
   };
   return (
+     <nav
+      ref={navbarRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        width: '100%',
+        zIndex: 1000,
+        backgroundColor: '#1e1e2f',
+        color: 'white',
+        padding: '10px 20px',
+        boxShadow: isScrolled ? '0 2px 10px rgba(0,0,0,0.3)' : 'none',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}
+    >
+      <a href="/" style={{ textDecoration: 'none', color: 'white', fontSize: '20px', fontWeight: 'bold' }}>
+        🕹️ GameZone
+      </a>
+
+      <div>
+        <button
+          style={{
+            background: 'transparent',
+            color: 'white',
+            border: '1px solid white',
+            padding: '5px 10px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+          }}
+        >
+          Menu
+        </button>
+      </div>
+    </nav>
     <div style={{ margin: '20px 0' }}>
       <button
         onClick={listNFT}
@@ -157,6 +202,7 @@ const ListNftButton = ({ program, publicKey, signTransaction, connection, profil
       )}
     </div>
   );
-};
+}};
 
 export default ListNftButton;
+
