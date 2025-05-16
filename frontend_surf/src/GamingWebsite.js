@@ -153,7 +153,7 @@ function GamingWebsite() {
           <div className="container">
             {/* Logo */}
             <a className="navbar-brand logo-text" href="#">
-             <img src="/logo.png" alt="NEXUS Logo" style={{ height: '65px' }} />
+              <img src="/logo.png" alt="NEXUS Logo" style={{ height: '65px' }} />
               <i className="fas fa-gamepad me-2"></i>
               Zypher<i>X</i>
             </a>
@@ -176,7 +176,7 @@ function GamingWebsite() {
                   <a className="nav-link px-3" href="#">Home</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link px-3" href="#">Play</a>
+                  <a className="nav-link px-3" href="/game">Play</a>
                 </li>
                 <li className="nav-item">
                   <a className="nav-link px-3" href="/marketplace">Market</a>
