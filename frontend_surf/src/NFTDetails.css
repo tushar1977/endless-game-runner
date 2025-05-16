@@ -1,6 +1,6 @@
-.nft-details-container {
-  background-color: #111827; /* Dark background */
-  color: #f3f4f6; /* Light text */
+/* .nft-details-container {
+  background-color: #111827; 
+  color: #f3f4f6; 
   min-height: 100vh;
   padding: 20px;
   display: flex;
@@ -9,14 +9,14 @@
 }
 
 .nft-card {
-  background-color: #1f2937; /* Darker card background */
+  background-color: #1f2937;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   max-width: 800px;
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 1.5fr; /* Adjust ratio as needed */
+  grid-template-columns: 1fr 1.5fr; 
   gap: 20px;
 }
 
@@ -25,12 +25,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2d3748; /* Slightly darker image background */
+  background-color: #2d3748;
 }
 
 .nft-image-wrapper {
   position: relative;
-  width: 200px; /* Default image size */
+  width: 200px;
   height: 200px;
   transition: width 0.3s ease, height 0.3s ease;
 }
@@ -106,7 +106,7 @@
 }
 
 .buy-now-button {
-  background-color: #6366f1; /* Indigo */
+  background-color: #6366f1;
   color: #f3f4f6;
   border: none;
   border-radius: 8px;
@@ -195,7 +195,7 @@
 }
 
 .detail-value-text.truncate {
-  max-width: 150px; /* Adjust as needed */
+  max-width: 150px; 
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -255,7 +255,7 @@
   background-color: #374151;
 }
 
-/* Loading, error, not found states */
+
 .nft-details-container.loading,
 .nft-details-container.error,
 .nft-details-container.not-found {
@@ -273,10 +273,10 @@
   color: #ff9800;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .nft-card {
-    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    grid-template-columns: 1fr; 
   }
 
   .nft-image-container {
@@ -305,4 +305,159 @@
   .detail-value .truncate {
     max-width: 100%;
   }
+} */
+/* Body and page background */
+body {
+  background: radial-gradient(circle at center, #0f0f1b, #050512);
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Panel background and cards */
+.bg-gray-900 {
+  background: #0a0a0f;
+}
+
+.bg-gray-800 {
+  background: linear-gradient(145deg, #0f111a, #05050a);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.05), inset 0 0 15px rgba(0, 255, 255, 0.02);
+  border: 1px solid #1a1a2e;
+}
+
+/* Neon borders for sections */
+.rounded-lg {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s ease;
+}
+
+.rounded-lg:hover {
+  box-shadow: 0 0 10px #00ffe1;
+}
+
+/* Text styles */
+.text-white, .text-gray-300, .text-gray-400 {
+  color: #c0cbf5;
+}
+
+.text-blue-500 {
+  color: #00f0ff;
+}
+
+.text-blue-400 {
+  color: #30e0f0;
+}
+
+.text-gray-300 {
+  color: #cbd5e1;
+}
+
+.text-gray-400 {
+  color: #a3aed3;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+/* Section titles */
+.text-lg {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #f0f0ff;
+}
+
+.text-xl, .text-2xl {
+  color: #f5f5ff;
+}
+
+/* Hover effects */
+.hover\:text-pink-500:hover {
+  color: #ff66c4;
+}
+
+.hover\:text-blue-500:hover {
+  color: #00d9ff;
+}
+
+.hover\:text-green-500:hover {
+  color: #6aff8f;
+}
+
+.hover\:bg-opacity-70:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Copy & action buttons */
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Action button styling (like Download, Expand, etc.) */
+.bg-opacity-50 {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.p-1, .p-1\.5 {
+  padding: 0.25rem;
+}
+
+.rounded {
+  border-radius: 6px;
+}
+
+/* 3D Image container */
+.relative {
+  transform-style: preserve-3d;
+  perspective: 600px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.relative:hover {
+  transform: rotateY(3deg) rotateX(3deg);
+}
+
+/* Attribute cards */
+.bg-gray-700 {
+  background-color: #1a1b26;
+}
+
+.bg-gray-700:hover {
+  background-color: #25263b;
+  box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+/* Tag pills */
+.bg-blue-800 {
+  background-color: #1e3a8a;
+}
+
+.bg-green-800 {
+  background-color: #064e3b;
+}
+
+.text-green-200 {
+  color: #6ee7b7;
+}
+
+.text-blue-200 {
+  color: #93c5fd;
+}
+
+/* Border glow and transitions */
+.border-b {
+  border-bottom: 1px solid #2a2a40;
+}
+
+.transition-colors {
+  transition: color 0.3s ease;
+}
+
+.transition-all {
+  transition: all 0.3s ease;
 }
