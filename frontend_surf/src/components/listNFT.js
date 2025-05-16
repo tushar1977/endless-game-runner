@@ -130,41 +130,7 @@ const ListNftButton = ({ program, publicKey, signTransaction, connection, profil
     }
   };
   return (
-     <nav
-      ref={navbarRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        width: '100%',
-        zIndex: 1000,
-        backgroundColor: '#1e1e2f',
-        color: 'white',
-        padding: '10px 20px',
-        boxShadow: isScrolled ? '0 2px 10px rgba(0,0,0,0.3)' : 'none',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}
-    >
-      <a href="/" style={{ textDecoration: 'none', color: 'white', fontSize: '20px', fontWeight: 'bold' }}>
-        🕹️ GameZone
-      </a>
-
-      <div>
-        <button
-          style={{
-            background: 'transparent',
-            color: 'white',
-            border: '1px solid white',
-            padding: '5px 10px',
-            borderRadius: '6px',
-            cursor: 'pointer',
-          }}
-        >
-          Menu
-        </button>
-      </div>
-    </nav>
+     
     <div style={{ margin: '20px 0' }}>
       <button
         onClick={listNFT}
